@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  license-plate-app:
+    build: .
+    container_name: license-plate-detection
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./static:/app/static
+      - ./uploads:/app/uploads
+      - ./best.pt:/app/best.pt
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+    restart: always
