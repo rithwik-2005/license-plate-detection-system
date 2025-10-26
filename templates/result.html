@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .video-section {
+            width: 100%;
+        }
+
+        .video-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        video {
+            width: 100% !important;
+            height: auto !important;
+            display: block;
+            background: #000;
+            border-radius: 8px;
+            min-height: 500px;
+            max-height: 700px;
+        }
+
+        .download-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .download-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .download-btn.excel {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .download-btn.excel:hover {
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.6);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+
+        .status {
+            padding: 15px;
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            border-radius: 4px;
+            margin-top: 15px;
+            color: #1976d2;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-box strong {
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            video {
+                max-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Detection Complete</h1>
+
+        <div class="content">
+            <div class="video-section">
+                <h2>📹 Processed Video</h2>
+                <div class="video-container">
+                    <video id="videoPlayer" controls playsinline>
+                        <source src="/static/{{ video_path }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="status">
+                    ✓ Video ready to play - Use controls to play, pause, or download
+                </div>
+            </div>
+
+            <div class="download-section">
+                <h2>📥 Downloads</h2>
+                <a href="/static/{{ excel_path }}" class="download-btn excel" download>
+                    📊 Download Excel Report
+                </a>
+                <a href="/" class="download-btn">
+                    🔄 Process Another Video
+                </a>
+
+                <div class="info-box">
+                    <strong>📌 Info:</strong><br>
+                    • Excel file contains all detected plates<br>
+                    • Video shows plates with tracking IDs<br>
+                    • Data includes timestamp and plate number
+                </div>
+            </div>
+        </div>
+
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('videoPlayer');
+            
+            // Ensure video controls are visible
+            video.setAttribute('controlsList', 'nodownload');
+            
+            video.addEventListener('error', function() {
+                console.error('Video load error:', video.error);
+                const status = document.querySelector('.status');
+                status.innerHTML = '⚠️ Error loading video. Please refresh the page.';
+                status.style.background = '#fee';
+                status.style.borderLeftColor = '#c33';
+                status.style.color = '#c33';
+            });
+            
+            video.addEventListener('loadstart', function() {
+                console.log('Loading video...');
+            });
+            
+            video.addEventListener('canplay', function() {
+                console.log('Video ready to play');
+            });
+
+            // Force reload video source
+            video.load();
+        });
+    </script>
+</body>
+</html>

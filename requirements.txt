@@ -1,0 +1,9 @@
+Flask>=2.0
+opencv-python-headless>=4.5
+ultralytics>=8.0.0
+paddlepaddle>=2.5.0              # if using CPU version; if you're on GPU, use correct cuda build
+paddleocr>=2.0.2
+pandas
+openpyxl
+cvzone
+numpy
