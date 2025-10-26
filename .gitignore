@@ -66,3 +66,4 @@ temp/
 
 # Model files (optional - comment out if you want to include)
 # best.pt
+.env.example
